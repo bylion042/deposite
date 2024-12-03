@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation Box</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  
+
+  <div class="donation-box">
+    <h2>DONATE NOW</h2>
+    <form id="donation-form" action="/donate" method="POST">
+      <div class="donation-tabs">
+        <button id="monthly" class="tab active" type="button">MONTHLY</button>
+        <button id="single" class="tab" type="button">SINGLE</button>
+      </div>
+      
+      <div class="donation-amounts">
+        <button class="amount active" type="button" data-amount="5">$5</button>
+        <button class="amount" type="button" data-amount="10">$10</button>
+        <button class="amount" type="button" data-amount="15">$15</button>
+      </div>
+      
+      <p class="amount-description">£5 could pay for 150 doses of therapeutic milk to help young children recover from life-threatening hunger.</p>
+      
+      <!-- Hidden input to store the selected amount -->
+<!-- Hidden input to store the selected amount -->
+<input type="hidden" name="amount" id="selected-amount" value="5">
+
+<!-- Input field for custom amount, restricted to numeric values -->
+<input type="text" class="custom-amount" id="custom-amount" name="custom-amount" placeholder="Enter own amount">
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const customAmountInput = document.getElementById("custom-amount");
+
+    // Allow only numeric input
+    customAmountInput.addEventListener("input", (event) => {
+      const value = event.target.value;
+
+      // Remove any non-numeric characters
+      event.target.value = value.replace(/[^0-9]/g, "");
+    });
+  });
+</script>
+
+
+
+
+<button class="donate-button" type="submit">DONATE</button>
+    </form>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const amountButtons = document.querySelectorAll(".amount");
+      const customAmountInput = document.getElementById("custom-amount");
+      const selectedAmountInput = document.getElementById("selected-amount");
+  
+      amountButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // Deselect other buttons
+          document.querySelector(".amount.active").classList.remove("active");
+          button.classList.add("active");
+  
+          // Set the hidden input to the selected button's value
+          selectedAmountInput.value = button.getAttribute("data-amount");
+          customAmountInput.value = ""; // Clear custom input if button is selected
+        });
+      });
+  
+      customAmountInput.addEventListener("input", () => {
+        // Clear active button and set custom amount
+        const activeButton = document.querySelector(".amount.active");
+        if (activeButton) activeButton.classList.remove("active");
+        selectedAmountInput.value = customAmountInput.value;
+      });
+    });
+  </script>
+  
+
+  <script src="/public/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Methods</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include("partials/header") %>
+
+  <div class="donation-summary">
+    <h2>Donation Summary</h2>
+    <p>You are donating: <strong>$<%= donationAmount %></strong></p>
+    <h3>Choose a Payment Method</h3>
+    <div class="payment-methods">
+      <button class="payment-button" data-method="PayPal">PayPal</button>
+      <button class="payment-button" data-method="CreditCard">Credit Card</button>
+      <button class="payment-button" data-method="BankTransfer">Bank Transfer</button>
+    </div>
+
+    <!-- Dynamic section to show payment instructions -->
+    <div id="payment-instructions" style="display: none; margin-top: 20px;">
+      <h3>Payment Instructions</h3>
+      <div id="instructions-content">
+        <!-- Content will be dynamically loaded -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const paymentButtons = document.querySelectorAll(".payment-button");
+      const instructionsDiv = document.getElementById("payment-instructions");
+      const instructionsContent = document.getElementById("instructions-content");
+
+      // Event listener for payment method buttons
+      paymentButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const method = button.getAttribute("data-method");
+
+          // Show the instructions container
+          instructionsDiv.style.display = "block";
+
+          // Load dynamic instructions based on the method
+          switch (method) {
+            case "PayPal":
+              instructionsContent.innerHTML = `
+                <p>To donate using PayPal:</p>
+                <ol>
+                  <li>Log in to your PayPal account.</li>
+                  <li>Send $<%= donationAmount %> to our PayPal email: <strong>donate@example.com</strong></li>
+                  <li>Use "Donation" as the payment note.</li>
+                </ol>`;
+              break;
+
+            case "CreditCard":
+              instructionsContent.innerHTML = `
+                <p>To donate using a credit card:</p>
+                <form action="/process-payment" method="POST">
+                  <input type="hidden" name="amount" value="<%= donationAmount %>">
+                  <label for="card-number">Card Number:</label>
+                  <input type="text" id="card-number" name="cardNumber" required>
+                  <label for="expiry-date">Expiry Date:</label>
+                  <input type="text" id="expiry-date" name="expiryDate" placeholder="MM/YY" required>
+                  <label for="cvv">CVV:</label>
+                  <input type="text" id="cvv" name="cvv" required>
+                  <button type="submit">Pay $<%= donationAmount %></button>
+                </form>`;
+              break;
+
+            case "BankTransfer":
+              instructionsContent.innerHTML = `
+                <p>To donate using a bank transfer:</p>
+                <ul>
+                  <li>Bank Name: Example Bank</li>
+                  <li>Account Number: 123456789</li>
+                  <li>Sort Code: 12-34-56</li>
+                  <li>Reference: Donation $<%= donationAmount %></li>
+                </ul>`;
+              break;
+
+            default:
+              instructionsContent.innerHTML = `<p>Please select a valid payment method.</p>`;
+          }
+        });
+      });
+    });
+  </script>
+
+  <%- include("partials/footer") %>
+</body>
+</html>
